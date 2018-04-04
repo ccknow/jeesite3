@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache updateCheck="false" name="defaultCache">
+
+	<diskStore path="java.io.tmpdir/jeesite/ehcache/default" />
+
+	<!-- DefaultCache setting. -->
+	<defaultCache maxEntriesLocalHeap="100" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"
+		overflowToDisk="true" maxEntriesLocalDisk="100000" />
+	
+	<cache name="sysCache" maxElementsInMemory="100" eternal="true" overflowToDisk="true"/>
+	
+	<cache name="cmsCache" maxElementsInMemory="100" eternal="true" overflowToDisk="true"/>
+	<!-- 
+		Shiro会在每次鉴权时重新获取用户的授权信息，一般需要用Cache缓存起来。
+		默认的Cache是JVM内的，不会过期，这就需要在用户和角色管理中，显式的插入代码在修改用户/角色后清理缓存。
+		如果懒一点，可以使用Ehcache单机版,定义120秒自然过期。
+		另外，如果是集群，又希望即时更新，就又需要使用Ehcache 集群方案如Ehcache-RMI，又要插入代码即时更新。
+ 		但个人还是推荐使用120秒自然过期最为简单方便，见showcase中的示例。
+	 -->    
+    <cache name="shiro-activeSessionCache" maxElementsInMemory="100" overflowToDisk="true"
+           eternal="true" timeToLiveSeconds="0" timeToIdleSeconds="0"
+           diskPersistent="true" diskExpiryThreadIntervalSeconds="600"/>
+
+    <cache name="org.apache.shiro.realm.text.PropertiesRealm-0-accounts"
+           maxElementsInMemory="100" eternal="true" overflowToDisk="true"/>
+    
+    <cache name="SimplePageCachingFilter" maxElementsInMemory="100" eternal="false" overflowToDisk="true"
+    	timeToIdleSeconds="120" timeToLiveSeconds="120" memoryStoreEvictionPolicy="LFU"/>
+    	
+</ehcache>
